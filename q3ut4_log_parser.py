@@ -428,18 +428,8 @@ order by lower(fragger) asc, count(*) desc
 			print "<script>datas = {"
 			player = row[0].lower()
 
-		#print "<tr><td style='width: 180px;'>%s</td>" % cgi.escape(row[1].replace('UT_MOD_', ''))
 		print "'%s':" % cgi.escape(row[1].replace('UT_MOD_', ''))
 		print "%s," % str(row[2])
-		
-		
-		
-		bar_str = '        <td><span class="ascii-bar">'
-		for i in xrange(0, row[2]):
-			bar_str = ''.join([bar_str, '| '])
-		bar_str = ''.join([bar_str, '</span>&nbsp;', str(row[2]), '</td>'])
-		
-		#print """%s</tr>""" % bar_str
 	print "} ; makeChart('%s',datas)</script>" % player
 
 #
