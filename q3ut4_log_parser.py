@@ -423,27 +423,24 @@ order by lower(fragger) asc, count(*) desc
 	for row in curs:
 		if (player != row[0].lower()):
 			if (player):
-				print "    </table>"
-			print """\
-    <h3>%s weapons:</h3>
-    <table>\
-""" % cgi.escape(row[0])
+				print "} ; makeChart('%s',datas)</script>" % player
+			print "<h3>%s weapons:</h3><canvas id='%s_weapons' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
+			print "<script>datas = {"
 			player = row[0].lower()
 
-		print """\
-      <tr>
-        <td style="width: 180px;">%s</td>\
-""" % cgi.escape(row[1].replace('UT_MOD_', ''))
+		#print "<tr><td style='width: 180px;'>%s</td>" % cgi.escape(row[1].replace('UT_MOD_', ''))
+		print "'%s':" % cgi.escape(row[1].replace('UT_MOD_', ''))
+		print "%s," % str(row[2])
+		
+		
 		
 		bar_str = '        <td><span class="ascii-bar">'
 		for i in xrange(0, row[2]):
 			bar_str = ''.join([bar_str, '| '])
 		bar_str = ''.join([bar_str, '</span>&nbsp;', str(row[2]), '</td>'])
 		
-		print """%s
-      </tr>\
-""" % bar_str
-	print "    </table>"
+		#print """%s</tr>""" % bar_str
+	print "} ; makeChart(%s,datas)</script>" % player
 
 #
 def he_ranking():
@@ -727,6 +724,17 @@ def main():
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+	<script src="https://cdnjs.com/libraries/Chart.js"></script>    
+    <script src="script.js"></script>		
 </head>
 
 <body>
@@ -783,18 +791,6 @@ def main():
     </main>
     </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-	<script src="https://cdnjs.com/libraries/Chart.js"></script>    
-    <script src="script.js"></script>	
   </body>
 </html>\
 """
