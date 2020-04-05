@@ -28,6 +28,7 @@ db_conn = None
 def create_db():
 	global db_conn
 	db_conn = sqlite3.connect(':memory:')
+	#db_conn = sqlite3.connect('q3ut4.sqlite')
 	db_conn.execute('create table frags (fragger text, fragged text, weapon text)')
 	db_conn.execute('create table games (player text, start integer, stop integer)')
 	db_conn.execute('create table flags (player text, event text)')
@@ -233,7 +234,7 @@ order by sum(stop-start) desc
 # 
 def frags_repartition():
 	global db_conn
-	print "    <a name=\"11\"><h2>Frags repartition per player</h2></a>"
+	print "    <a name='frags-player'><h2 class='mt-5'>Frags repartition per player</h2></a>"
 	curs = db_conn.cursor()
 	curs.execute('''
 select fragger, fragged, count(*) as frags 
@@ -272,7 +273,7 @@ order by lower(fragger) asc, count(*) desc
 def death_repartition():
 	global db_conn
 	print """\
-    <a name=\"12\"><h2>Deaths repartition per player</h2></a>
+    <a name='deaths-player'><h2 class='mt-5'>Deaths repartition per player</h2></a>
     <table>
 """
 	curs = db_conn.cursor()
@@ -313,8 +314,10 @@ order by lower(fragged) asc, count(*) desc
 def fdratio_ranking():
 	global db_conn
 	print """\
-    <a name="7"><h2>Frag/death ratio-based ranking</h2></a>
-    <ol>\
+    <a name="frags-deaths"><h2 class='mt-5'>Frag/death ratio-based ranking <small class='text-muted'>Ratio between Kills and deaths</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Ratio</th></tr></thead>
+	<tbody>\
 """
 	players_curs = db_conn.cursor()
 	players_curs.execute('''
@@ -350,18 +353,21 @@ where lower(fragged) = lower(?)
 			ratios.append((players_row[0], 666.0))
 
 	ratios.sort(key=lambda ratio: ratio[1], reverse=True)
+	i = 1
 	for r in ratios:
-		print "      <li>%s (%f)</li>" % (cgi.escape(r[0]), r[1])
-
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%f</td></tr>" % (i, cgi.escape(r[0]), r[1])
+		i += 1
+	print "</tbody></table>"
 
 
 #
 def frag_ranking():
 	global db_conn
 	print """\
-    <a name="8"><h2>Frag-based ranking</h2></a>
-    <ol>\
+    <a name="frags"><h2 class='mt-5'>Frag-based ranking <small class='text-muted'>Number of Kills</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -371,16 +377,20 @@ where fragger != fragged
 group by lower(fragger)
 order by count(*) desc, lower(fragger) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 #
 def presence_ranking():
 	global db_conn
 	print """\
-    <a name="9"><h2>Presence-based ranking</h2></a>
-    <ol>\
+    <a name="presence"><h2 class='mt-5'>Presence-based ranking <small class='text-muted'>Total time spent on the Server</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Time</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -389,17 +399,19 @@ from games
 group by lower(player)
 order by sum(stop-start) desc
 ''')
+	i = 1
 	for row in curs:
 		hours = int(row[1]) / 3600
 		minutes = (int(row[1]) - hours*3600) / 60
 		seconds = (int(row[1]) - minutes*60) % 60
-		print "      <li>%s (%i:%.2i:%.2i)</li>" % (row[0], hours, minutes, seconds)
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%i:%.2i:%.2i</td></tr>" % (i, row[0], hours, minutes, seconds)
+		i += 1
+	print "</tbody></table>"
 
 # 
 def favorite_weapons():
 	global db_conn
-	print "    <a name=\"13\"><h2>Favorite weapons per player</h2></a>"
+	print "<a name='weapons-player'><h2 class='mt-5'>Favorite weapons per player</h2></a>"
 	curs = db_conn.cursor()
 	curs.execute('''
 select fragger, weapon, count(*) as frags 
@@ -437,8 +449,10 @@ order by lower(fragger) asc, count(*) desc
 def he_ranking():
 	global db_conn
 	print """\
-    <a name="5"><h2>Bomber ranking</h2></a>
-    <ol>\
+    <a name="bomber"><h2 class='mt-5'>Bomber ranking <small class='text-muted'>Kills with HE grenades</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -448,16 +462,20 @@ where weapon = "UT_MOD_HEGRENADE"
 group by lower(fragger)
 order by count(*) desc, lower(fragger) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 #
 def sniper_ranking():
 	global db_conn
 	print """\
-    <a name="6"><h2>Sniper ranking</h2></a>
-    <ol>\
+    <a name="sniper"><h2 class='mt-5'>Sniper ranking <small class='text-muted'>Kills with Sniper rifles</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -467,15 +485,19 @@ where weapon = "UT_MOD_SR8" or weapon = "UT_MOD_PSG1"
 group by lower(fragger)
 order by count(*) desc, lower(fragger) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 def capture_ranking():
 	global db_conn
 	print """\
-    <a name="2"><h2>Capture ranking</h2></a>
-    <ol>\
+    <a name="capture"><h2 class='mt-5'>Capture ranking <small class='text-muted'>Number of flags captured</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Captures</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -485,16 +507,19 @@ where event = "CAPTURE"
 group by lower(player)
 order by count(*) desc, lower(player) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 def attack_ranking():
 	global db_conn
 	print """\
-    <a name="3"><h2>Attack ranking</h2></a>
-	<paragraph> Number of flags catched </paragraph>
-    <ol>\
+    <a name="attack"><h2 class='mt-5'>Attack ranking <small class='text-muted'>Number of flags catched</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Catches</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -504,16 +529,19 @@ where event = "CATCH"
 group by lower(player)
 order by count(*) desc, lower(player) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 def defense_ranking():
 	global db_conn
 	print """\
-    <a name="4"><h2>Defense ranking</h2></a>
-	<paragraph> Number of flags returned </paragraph>
-    <ol>\
+	<a name='defense'><h2 class='mt-5'>Defense ranking <small class='text-muted'>Number of flags returned</small></h2></a>	
+    <table class='table table-hover table-sm'>
+	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Returns</th></tr></thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -523,15 +551,21 @@ where event = "RETURN"
 group by lower(player)
 order by count(*) desc, lower(player) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s</th><td>%s</td><td>%s</td</tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 
 def score_ranking():
 	global db_conn
 	print """\
-    <a name="1"><h2>Score ranking</h2></a>
-    <ol>\
+	<a name='score'><h2 class='mt-5'>Score ranking <small class='text-muted'>based on victories vs. defeats</small></h2></a>
+	<table class='table table-hover table-sm'>
+	<thead class="thead-dark">
+        <tr><th>Rank</th><th>Player</th><th>Victories</th><th>Defeats</th><th>Points</th></tr>
+	</thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -557,15 +591,22 @@ on score.player = t2.player2
 group by lower(player1)
 order by score desc, lower(player1) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s : %s victories - %s defeats = <b>%s</b></li>" % (row[0], row[1], row[2], row[3])
-	print "    </ol>"
+
+		print "<tr><th>%s.</th><td>%s</td><td>%s</td><td>%s</td><th>%s</th></tr>" % (i, row[0], row[1], row[2], row[3])
+		i += 1
+	print "</tbody></table>"
 
 def chat_ranking():
 	global db_conn
 	print """\
-    <a name="10"><h2>Chat ranking</h2></a>
-    <ol>\
+    <a name="chat"><h2 class='mt-5'>Chat ranking <small class='text-muted'>Number of chats</small></h2></a>
+    <table class='table table-hover table-sm'>
+	<thead class="thead-dark">
+        <tr><th>Rank</th><th>Player</th><th>Chats</th></tr>
+	</thead>
+	<tbody>\
 """
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -574,14 +615,16 @@ from chats
 group by lower(player)
 order by count(*) desc, lower(player) asc
 ''')
+	i = 1
 	for row in curs:
-		print "      <li>%s (%s)</li>" % (row[0], row[1])
-	print "    </ol>"
+		print "<tr><th>%s.</th><td>%s</td><td>%s</td></tr>" % (i, row[0], row[1])
+		i += 1
+	print "</tbody></table>"
 	
 def best_teammates():
 	global db_conn
 	print """\
-    <a name=\"14\"><h2>Best teammates per player</h2></a>
+    <a name='teammates'><h2 class='mt-5'>Best teammates per player</h2></a>
 	<ol>\
 """
 	curs = db_conn.cursor()
@@ -667,49 +710,67 @@ def main():
 	filter_db(0.05)
 	
 	print """\
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en-US">
-  <head>
-    <title>UrbT stats page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style>
-      h2 {
-        border-bottom: 1px solid grey;
-      }
-      span.ascii-bar {
-        background: #EFA21E;
-        color: #EFA21E;
-		font-size: xx-small;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Urban Terror statistics webpage</h1>
-    <hr>
-    <ul>Available stats:
-      <li><a href="#1">Score ranking</a></li>	  
-      <li><a href="#2">Capture ranking</a></li>	  
-      <li><a href="#3">Attack ranking</a></li>	  
-      <li><a href="#4">Defense ranking</a></li>	  
-      <li><a href="#5">Bomber ranking</a></li>	  
-      <li><a href="#6">Sniper ranking</a></li>	  
-      <li><a href="#7">Frags/Deaths ratio-based ranking</a></li>
-      <li><a href="#8">Frag-based ranking</a></li>
-      <li><a href="#9">Presence-based ranking</a></li>
-      <li><a href="#10">Chat ranking</a></li>
-      <li><a href="#11">Frags repartition per player</a></li>
-      <li><a href="#12">Deaths repartition per player</a></li>
-      <li><a href="#13">Favorite weapons per player</a></li>
-    </ul>\
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>12 Salopards - UrbanTerror Stats</title>
+    <meta name="description" content="Statistics from the UrT Server '12 Salopards'">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm col-md mr-0" href="#">12 Salopards - Urban Terror Stats</a>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <h6
+                        class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Available Reports</span>
+                    </h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link active" href="#score">Score ranking</a></li>
+						<li class="nav-item"><a class="nav-link" href="#frags-deaths">Frags/Deaths ratio-based ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#frags">Frag-based ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#capture">Capture ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#attack">Attack ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#defense">Defense ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#bomber">Bomber ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#sniper">Sniper ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#presence">Presence-based ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#chat">Chat ranking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#frags-player">Frags repartition per player</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#deaths-player">Deaths repartition per player</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#weapons-player">Favorite weapons per player</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">\
 """
 	score_ranking()
+	fdratio_ranking()
+	frag_ranking()
 	capture_ranking()
 	attack_ranking()
 	defense_ranking()
 	he_ranking()
 	sniper_ranking()
-	fdratio_ranking()
-	frag_ranking()
 	presence_ranking()
 	chat_ranking()
 	frags_repartition()
@@ -719,7 +780,19 @@ def main():
 	db_conn.close()
 
 	print """\
-    <hr>
+    </main>
+    </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
   </body>
 </html>\
 """
