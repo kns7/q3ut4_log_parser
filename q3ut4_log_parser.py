@@ -440,7 +440,7 @@ order by lower(fragger) asc, count(*) desc
 		bar_str = ''.join([bar_str, '</span>&nbsp;', str(row[2]), '</td>'])
 		
 		#print """%s</tr>""" % bar_str
-	print "} ; makeChart(%s,datas)</script>" % player
+	print "} ; makeChart('%s',datas)</script>" % player
 
 #
 def he_ranking():
