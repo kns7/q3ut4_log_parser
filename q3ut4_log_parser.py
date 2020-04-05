@@ -234,7 +234,8 @@ order by sum(stop-start) desc
 # 
 def frags_repartition():
 	global db_conn
-	print "    <a name='frags-player'><h2 class='mt-5'>Frags repartition per player</h2></a>"
+	print "<a name='frags-player'><h2 class='mt-5'>Frags repartition per player</h2></a>"
+
 	curs = db_conn.cursor()
 	curs.execute('''
 select fragger, fragged, count(*) as frags 
@@ -246,27 +247,14 @@ order by lower(fragger) asc, count(*) desc
 	for row in curs:
 		if (player != row[0].lower()):
 			if (player):
-				print "    </table>"
-			print """\
-    <h3>%s fragged:</h3>
-    <table>\
-""" % cgi.escape(row[0])
+				print "} ; makeChart('%s',datas,'fragged')</script>" % player
+			print "<h3>%s fragged:</h3><canvas id='%s_fragged' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
+			print "<script>datas = {"
 			player = row[0].lower()
 
-		print """\
-      <tr>
-        <td style="width: 180px;">%s</td>\
-""" % cgi.escape(row[1])
-		
-		bar_str = '        <td><span class="ascii-bar">'
-		for i in xrange(0, row[2]):
-			bar_str = ''.join([bar_str, '| '])
-		bar_str = ''.join([bar_str, '</span>&nbsp;', str(row[2]), '</td>'])
-		
-		print """%s
-      </tr>\
-""" % bar_str
-	print "    </table>"
+		print "'%s':" % cgi.escape(row[1])
+		print "%s," % str(row[2])
+	print "} ; makeChart('%s',datas,'fragged')</script>" % player
 
 
 # 
@@ -293,7 +281,7 @@ order by lower(fragged) asc, count(*) desc
 		print "'%s':" % cgi.escape(row[1])
 		print "%s," % str(row[2])
 	print "} ; makeChart('%s',datas,'fraggedby')</script>" % player
-	
+
 
 # 
 def favorite_weapons():
