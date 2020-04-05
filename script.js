@@ -23,7 +23,7 @@ function getRandomColor() {
     return color;
 }
 
-function makeChart(player,datas){
+function makeChart(player,datas,scheme){
     
     numbers = [];
     weapons = [];
@@ -37,13 +37,17 @@ function makeChart(player,datas){
         type: 'pie',
         data: {
             datasets: [{
-              data: numbers,
-              backgroundColor: chartColors
+              data: numbers
             }],
             labels: weapons
           },
         options: {
-          responsive: false
+          responsive: false,
+          plugins: {
+              colorschemes: {
+                  scheme: scheme
+              }
+          }
         }
     });
 }

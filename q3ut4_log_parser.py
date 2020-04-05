@@ -309,6 +309,30 @@ order by lower(fragged) asc, count(*) desc
 """ % bar_str
 	print "    </table>"
 
+# 
+def favorite_weapons():
+	global db_conn
+	print "<a name='weapons-player'><h2 class='mt-5'>Favorite weapons per player</h2></a>"
+	curs = db_conn.cursor()
+	curs.execute('''
+select fragger, weapon, count(*) as frags 
+from frags 
+group by lower(fragger), lower(weapon) 
+order by lower(fragger) asc, count(*) desc
+''')
+	player = None
+	for row in curs:
+		if (player != row[0].lower()):
+			if (player):
+				print "} ; makeChart('%s',datas)</script>" % player
+			print "<h3 class='mt-4'>%s weapons:</h3><canvas id='%s_weapons' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
+			print "<script>datas = {"
+			player = row[0].lower()
+
+		print "'%s':" % cgi.escape(row[1].replace('UT_MOD_', ''))
+		print "%s," % str(row[2])
+	print "} ; makeChart('%s',datas)</script>" % player
+
 
 #
 def fdratio_ranking():
@@ -359,7 +383,6 @@ where lower(fragged) = lower(?)
 		i += 1
 	print "</tbody></table>"
 
-
 #
 def frag_ranking():
 	global db_conn
@@ -407,30 +430,6 @@ order by sum(stop-start) desc
 		print "<tr><th>%s</th><td>%s</td><td>%i:%.2i:%.2i</td></tr>" % (i, row[0], hours, minutes, seconds)
 		i += 1
 	print "</tbody></table>"
-
-# 
-def favorite_weapons():
-	global db_conn
-	print "<a name='weapons-player'><h2 class='mt-5'>Favorite weapons per player</h2></a>"
-	curs = db_conn.cursor()
-	curs.execute('''
-select fragger, weapon, count(*) as frags 
-from frags 
-group by lower(fragger), lower(weapon) 
-order by lower(fragger) asc, count(*) desc
-''')
-	player = None
-	for row in curs:
-		if (player != row[0].lower()):
-			if (player):
-				print "} ; makeChart('%s',datas)</script>" % player
-			print "<h3>%s weapons:</h3><canvas id='%s_weapons' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
-			print "<script>datas = {"
-			player = row[0].lower()
-
-		print "'%s':" % cgi.escape(row[1].replace('UT_MOD_', ''))
-		print "%s," % str(row[2])
-	print "} ; makeChart('%s',datas)</script>" % player
 
 #
 def he_ranking():
@@ -724,6 +723,7 @@ def main():
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>    
+	<script src="chartjs-plugin-colorschemes.min.js"></script>
     <script src="script.js"></script>		
 </head>
 
