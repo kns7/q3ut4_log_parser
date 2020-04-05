@@ -69,3 +69,6 @@ Add following line to your crontab
 Change the user if needed as the paths (to the games Logfile and the Webserver root). Make sure you pick a user who has read access to the game logfile (usually *q3ut4/games.log*)
 
 
+## Sources
+
+This project is a fork of https://github.com/negre/q3ut4_log_parser
