@@ -23,7 +23,7 @@ function getRandomColor() {
     return color;
 }
 
-function makeChart(player,datas,scheme){
+function makeChart(player,datas,chart){
     
     numbers = [];
     weapons = [];
@@ -31,8 +31,13 @@ function makeChart(player,datas,scheme){
         numbers.push(datas[i])
         weapons.push(i)
     }
+    switch(chart){
+        case 'weapons': scheme = 'brewer.DarkTwo7'; break;
+        case 'fraggedby': scheme = 'office.Badge6'; break;
+        case 'fragged': scheme = 'office.Apothecary6'; break;
+    }
 
-    var ctx = document.getElementById(player + "_weapons");
+    var ctx = document.getElementById(player + "_"+chart);
       var myChart = new Chart(ctx, {
         type: 'pie',
         data: {

@@ -272,10 +272,8 @@ order by lower(fragger) asc, count(*) desc
 # 
 def death_repartition():
 	global db_conn
-	print """\
-    <a name='deaths-player'><h2 class='mt-5'>Deaths repartition per player</h2></a>
-    <table>
-"""
+	print "<a name='deaths-player'><h2 class='mt-5'>Deaths repartition per player</h2></a>"
+
 	curs = db_conn.cursor()
 	curs.execute('''
 select fragged, fragger, count(*) 
@@ -287,27 +285,15 @@ order by lower(fragged) asc, count(*) desc
 	for row in curs:
 		if (player != row[0].lower()):
 			if (player):
-				print "    </table>"
-			print """\
-    <h3>%s has been fragged by:</h3>
-    <table>\
-""" % cgi.escape(row[0])
+				print "} ; makeChart('%s',datas,'fraggedby')</script>" % player
+			print "<h3>%s has been fragged by:</h3><canvas id='%s_fraggedby' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
+			print "<script>datas = {"
 			player = row[0].lower()
 
-		print """\
-      <tr>
-        <td style="width: 180px;">%s</td>\
-""" % cgi.escape(row[1])
-		
-		bar_str = '        <td><span class="ascii-bar">'
-		for i in xrange(0, row[2]):
-			bar_str = ''.join([bar_str, '| '])
-		bar_str = ''.join([bar_str, '</span>&nbsp;', str(row[2]), '</td>'])
-		
-		print """%s
-      </tr>\
-""" % bar_str
-	print "    </table>"
+		print "'%s':" % cgi.escape(row[1])
+		print "%s," % str(row[2])
+	print "} ; makeChart('%s',datas,'fraggedby')</script>" % player
+	
 
 # 
 def favorite_weapons():
@@ -324,14 +310,14 @@ order by lower(fragger) asc, count(*) desc
 	for row in curs:
 		if (player != row[0].lower()):
 			if (player):
-				print "} ; makeChart('%s',datas)</script>" % player
+				print "} ; makeChart('%s',datas,'weapons')</script>" % player
 			print "<h3 class='mt-4'>%s weapons:</h3><canvas id='%s_weapons' width='480' height='480'></canvas>" % (cgi.escape(row[0]),cgi.escape(row[0].lower()))
 			print "<script>datas = {"
 			player = row[0].lower()
 
 		print "'%s':" % cgi.escape(row[1].replace('UT_MOD_', ''))
 		print "%s," % str(row[2])
-	print "} ; makeChart('%s',datas)</script>" % player
+	print "} ; makeChart('%s',datas,'weapons')</script>" % player
 
 
 #
