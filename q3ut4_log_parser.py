@@ -581,12 +581,10 @@ order by count(*) desc, lower(player) asc
 		i += 1
 	print "</tbody></table>"
 	
+
 def best_teammates():
 	global db_conn
-	print """\
-    <a name='teammates'><h2 class='mt-5'>Best teammates per player</h2></a>
-	<ol>\
-"""
+	print "<a name='teammates'><h2 class='mt-5'>Best teammates per player <small class='text-muted'>How much was a player a teammate or an opponent</small></h2></a>"
 	curs = db_conn.cursor()
 	curs.execute('''\
 SELECT DISTINCT player as player
@@ -598,8 +596,9 @@ ORDER BY player ASC
 		players.append(row[0])
 
 	for player in players:
-		print "<h3>%s :</h3>" % player
-		print "<table>"
+		print "<h3 class='mt-4'>%s :</h3>" % player
+		print "<table class='table table-hover table-sm'>"
+		print "<thead class='thead-dark'><tr><th>Player</th><th>Teammate</th><th>Opponent</th></tr></thead><tbody>"
 		curs.execute('''
 SELECT name1, teamate, oponent
 FROM
@@ -643,12 +642,7 @@ LEFT OUTER JOIN
 ON tt1.name1=tt2.name2
 ''' % (player, player, player, player))
 		for row in curs:
-			print """\
-<tr>
-<td style="width: 180px;">%s : </td>
-<td> %s </td>
-<td> %s </td>
-</tr>""" % (row[0], row[1], row[2])
+			print "<tr><td>%s</td><td> %s </td><td> %s </td></tr>" % (row[0], row[1], row[2])
 	
 
 # Main function
