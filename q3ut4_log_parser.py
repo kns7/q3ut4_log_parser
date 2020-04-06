@@ -724,6 +724,7 @@ def main():
                         <li class="nav-item"><a class="nav-link" href="#frags-player">Frags repartition per player</a></li>
                         <li class="nav-item"><a class="nav-link" href="#deaths-player">Deaths repartition per player</a></li>
                         <li class="nav-item"><a class="nav-link" href="#weapons-player">Favorite weapons per player</a></li>
+						<li class="nav-item"><a class="nav-link" href="#teammates">Best Teammates per player</a></li>
                     </ul>
                 </div>
             </nav>
