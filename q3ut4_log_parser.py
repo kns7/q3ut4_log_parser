@@ -234,7 +234,7 @@ order by sum(stop-start) desc
 # 
 def frags_repartition():
 	global db_conn
-	print "<a name='frags-player'><h2 class='mt-5'>Frags repartition per player</h2></a>"
+	print "<a name='frags-player'><h2 class='pt-48'>Frags repartition per player</h2></a>"
 
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -260,7 +260,7 @@ order by lower(fragger) asc, count(*) desc
 # 
 def death_repartition():
 	global db_conn
-	print "<a name='deaths-player'><h2 class='mt-5'>Deaths repartition per player</h2></a>"
+	print "<a name='deaths-player'><h2 class='pt-48'>Deaths repartition per player</h2></a>"
 
 	curs = db_conn.cursor()
 	curs.execute('''
@@ -286,7 +286,7 @@ order by lower(fragged) asc, count(*) desc
 # 
 def favorite_weapons():
 	global db_conn
-	print "<a name='weapons-player'><h2 class='mt-5'>Favorite weapons per player</h2></a>"
+	print "<a name='weapons-player'><h2 class='pt-48'>Favorite weapons per player</h2></a>"
 	curs = db_conn.cursor()
 	curs.execute('''
 select fragger, weapon, count(*) as frags 
@@ -312,7 +312,7 @@ order by lower(fragger) asc, count(*) desc
 def fdratio_ranking():
 	global db_conn
 	print """\
-    <a name="frags-deaths"><h2 class='mt-5'>Frag/death ratio-based ranking <small class='text-muted'>Ratio between Kills and deaths</small></h2></a>
+    <a name="frags-deaths"><h2 class='pt-48'>Frag/death ratio-based ranking <small class='text-muted'>Ratio between Kills and deaths</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Ratio</th></tr></thead>
 	<tbody>\
@@ -361,7 +361,7 @@ where lower(fragged) = lower(?)
 def frag_ranking():
 	global db_conn
 	print """\
-    <a name="frags"><h2 class='mt-5'>Frag-based ranking <small class='text-muted'>Number of Kills</small></h2></a>
+    <a name="frags"><h2 class='pt-48'>Frag-based ranking <small class='text-muted'>Number of Kills</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
 	<tbody>\
@@ -384,7 +384,7 @@ order by count(*) desc, lower(fragger) asc
 def presence_ranking():
 	global db_conn
 	print """\
-    <a name="presence"><h2 class='mt-5'>Presence-based ranking <small class='text-muted'>Total time spent on the Server</small></h2></a>
+    <a name="presence"><h2 class='pt-48'>Presence-based ranking <small class='text-muted'>Total time spent on the Server</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Time</th></tr></thead>
 	<tbody>\
@@ -409,7 +409,7 @@ order by sum(stop-start) desc
 def he_ranking():
 	global db_conn
 	print """\
-    <a name="bomber"><h2 class='mt-5'>Bomber ranking <small class='text-muted'>Kills with HE grenades</small></h2></a>
+    <a name="bomber"><h2 class='pt-48'>Bomber ranking <small class='text-muted'>Kills with HE grenades</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
 	<tbody>\
@@ -432,7 +432,7 @@ order by count(*) desc, lower(fragger) asc
 def sniper_ranking():
 	global db_conn
 	print """\
-    <a name="sniper"><h2 class='mt-5'>Sniper ranking <small class='text-muted'>Kills with Sniper rifles</small></h2></a>
+    <a name="sniper"><h2 class='pt-48'>Sniper ranking <small class='text-muted'>Kills with Sniper rifles</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Kills</th></tr></thead>
 	<tbody>\
@@ -454,7 +454,7 @@ order by count(*) desc, lower(fragger) asc
 def capture_ranking():
 	global db_conn
 	print """\
-    <a name="capture"><h2 class='mt-5'>Capture ranking <small class='text-muted'>Number of flags captured</small></h2></a>
+    <a name="capture"><h2 class='pt-48'>Capture ranking <small class='text-muted'>Number of flags captured</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Captures</th></tr></thead>
 	<tbody>\
@@ -476,7 +476,7 @@ order by count(*) desc, lower(player) asc
 def attack_ranking():
 	global db_conn
 	print """\
-    <a name="attack"><h2 class='mt-5'>Attack ranking <small class='text-muted'>Number of flags catched</small></h2></a>
+    <a name="attack"><h2 class='pt-48'>Attack ranking <small class='text-muted'>Number of flags catched</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Catches</th></tr></thead>
 	<tbody>\
@@ -498,7 +498,7 @@ order by count(*) desc, lower(player) asc
 def defense_ranking():
 	global db_conn
 	print """\
-	<a name='defense'><h2 class='mt-5'>Defense ranking <small class='text-muted'>Number of flags returned</small></h2></a>	
+	<a name='defense'><h2 class='pt-48'>Defense ranking <small class='text-muted'>Number of flags returned</small></h2></a>	
     <table class='table table-hover table-sm'>
 	<thead class='thead-dark'><tr><th>Rank</th><th>Player</th><th>Returns</th></tr></thead>
 	<tbody>\
@@ -520,7 +520,7 @@ order by count(*) desc, lower(player) asc
 def score_ranking():
 	global db_conn
 	print """\
-	<a name='score'><h2 class='mt-5'>Score ranking <small class='text-muted'>based on victories vs. defeats</small></h2></a>
+	<a name='score'><h2 class='pt-48'>Score ranking <small class='text-muted'>based on victories vs. defeats</small></h2></a>
 	<table class='table table-hover table-sm'>
 	<thead class="thead-dark">
         <tr><th>Rank</th><th>Player</th><th>Victories</th><th>Defeats</th><th>Points</th></tr>
@@ -561,7 +561,7 @@ order by score desc, lower(player1) asc
 def chat_ranking():
 	global db_conn
 	print """\
-    <a name="chat"><h2 class='mt-5'>Chat ranking <small class='text-muted'>Number of chats</small></h2></a>
+    <a name="chat"><h2 class='pt-48'>Chat ranking <small class='text-muted'>Number of chats</small></h2></a>
     <table class='table table-hover table-sm'>
 	<thead class="thead-dark">
         <tr><th>Rank</th><th>Player</th><th>Chats</th></tr>
@@ -584,7 +584,7 @@ order by count(*) desc, lower(player) asc
 
 def best_teammates():
 	global db_conn
-	print "<a name='teammates'><h2 class='mt-5'>Best teammates per player <small class='text-muted'>How much was a player a teammate or an opponent</small></h2></a>"
+	print "<a name='teammates'><h2 class='pt-48'>Best teammates per player <small class='text-muted'>How much was a player a teammate or an opponent</small></h2></a>"
 	curs = db_conn.cursor()
 	curs.execute('''\
 SELECT DISTINCT player as player
