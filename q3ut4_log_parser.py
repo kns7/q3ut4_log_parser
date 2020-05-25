@@ -210,7 +210,7 @@ order by sum(stop-start) desc
 	
 	for pt in playtime:
 		if pt[1] < ratio * max_time:
-			sys.stderr.write(pt[0]+' removed from database\n')
+			#sys.stderr.write(pt[0]+' removed from database\n')
 			db_conn.execute('''delete from frags where fragger = (?)''', (pt[0],))
 			db_conn.execute('''delete from games where player = (?)''', (pt[0],))
 			db_conn.execute('''delete from flags where player = (?)''', (pt[0],))
