@@ -699,18 +699,25 @@ def main():
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm col-md mr-0" href="#">12 Salopards - Urban Terror Stats</a>
+	<nav class="navbar sticky-top navbar-dark navbar-expand-lg bg-dark">
+		<a class="navbar-brand" href="#">URT Stats</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
 		<div class="collapse navbar-collapse" id="navbar">
 			<ul class="navbar-nav mr-auto">
+				<!--<li class="nav-item">
+					<a class="nav-link" href="/"><i class="fas fa-home"></i> Status</a>
+				</li>-->
 			</ul>
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="https://urt-admin.12salopards.fr"><i class="fas fa-cogs"></i> Admin du Serveur</a>
+					<a class="nav-link" href="https://urt-admin.12salopards.fr"><i class="fas fa-cogs"></i> Admin Serveur</a>
 				</li>
 			</ul>
 		</div>
-    </nav>
+	</nav>
     <div class="container-fluid">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar">
