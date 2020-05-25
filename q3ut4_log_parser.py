@@ -701,6 +701,18 @@ def main():
         <![endif]-->
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-sm col-md mr-0" href="#">12 Salopards - Urban Terror Stats</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        	<span class="navbar-toggler-icon"></span>
+    	</button>
+		<div class="collapse navbar-collapse" id="navbar">
+			<ul class="navbar-nav mr-auto">
+			</ul>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="https://urt-admin.12salopards.fr"><i class="fas fa-cogs"></i> Admin du Serveur</a>
+				</li>
+			</ul>
+		</div>
     </nav>
     <div class="container-fluid">
         <div class="row">
